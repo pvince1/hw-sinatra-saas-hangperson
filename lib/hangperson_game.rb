@@ -3,12 +3,13 @@ class HangpersonGame
   # add the necessary class methods, attributes, etc. here
   # to make the tests in spec/hangperson_game_spec.rb pass.
   
-  attr_accessor :word, :guesses, :wrong_guesses
+  attr_accessor :word, :guesses, :wrong_guesses, :guess_count
   
   def initialize(word)
     @word = word
     @guesses = ''
     @wrong_guesses = ''
+    @guess_count = 0
   end
 
   # You can test it by running $ bundle exec irb -I. -r app.rb
@@ -23,26 +24,37 @@ class HangpersonGame
     }
   end
     
-  def self.guess(letter)
-    if not /^[[:alpha]]/.match?(letter.downcase!)
+  def guess(letter)
+    if not /^[a-z]/.match?(letter)
         raise ArgumentError
-    if @guesses.include? letter
+    elsif @wrong_guesses.include?(letter) or @guesses.include?(letter)
         return false
     elsif @word.include? letter
         @guesses += letter
     else
         @wrong_guesses += letter
     end
+    @guess_count += 1
   end
           
-  def self.word_with_guesses
-    word_with_guesses = ""
-    @word.each do |letter|
+  def word_with_guesses
+    guessed_word = ""
+    @word.each_char do |letter|
         if @guesses.include? letter
-            word_with_guesses += letter
+            guessed_word += letter
         else
-            word_with_guesses += '-'
+            guessed_word += '-'
         end
     end
-    return word_with_guesses
+    return guessed_word
+  end
+  
+  def win_lose_play
+    if @word == word_with_guesses
+        return :win
+    elsif guess_count >= 7
+        return :lose
+    end
+  end
+    
 end
