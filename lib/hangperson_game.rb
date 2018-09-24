@@ -33,8 +33,8 @@ class HangpersonGame
         @guesses += letter
     else
         @wrong_guesses += letter
+        @guess_count += 1
     end
-    @guess_count += 1
   end
           
   def word_with_guesses
